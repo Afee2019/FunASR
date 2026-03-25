@@ -722,7 +722,7 @@ async def main():
             ws_serve,
             args.host,
             args.port,
-            subprotocols=["binary"],
+            # subprotocols=["binary"],  # 注释掉以兼容 websockets>=13
             ping_interval=None,
             ssl=ssl_context,
         )
@@ -731,7 +731,7 @@ async def main():
             ws_serve,
             args.host,
             args.port,
-            subprotocols=["binary"],
+            # subprotocols=["binary"],  # 注释掉以兼容 websockets>=13
             ping_interval=None,
         )
 

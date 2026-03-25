@@ -51,7 +51,7 @@ var file_data_array;  // array to save file data
 var totalsend=0;
 
 
-var now_ipaddress=window.location.href;
+var now_ipaddress=window.location.href.split("#")[0];
 now_ipaddress=now_ipaddress.replace("https://","wss://");
 now_ipaddress=now_ipaddress.replace("static/index.html","");
 var localport=window.location.port;
@@ -317,7 +317,17 @@ function handleWithTimestamp(tmptext,tmptime)
 	}
 	tmptext=tmptext.replace(/。|？|，|、|\?|\.|\ /g, ","); // in case there are a lot of "。"
 	var words=tmptext.split(",");  // split to chinese sentence or english words
-	var jsontime=JSON.parse(tmptime); //JSON.parse(tmptime.replace(/\]\]\[\[/g, "],[")); // in case there are a lot segments by VAD
+	var jsontime;
+	try {
+		jsontime=JSON.parse(tmptime);
+	} catch(e) {
+		// 兼容扁平格式 "250,490,510,750,..." -> [[250,490],[510,750],...]
+		var nums = String(tmptime).split(",").map(Number);
+		jsontime = [];
+		for(var k=0; k<nums.length-1; k+=2) {
+			jsontime.push([nums[k], nums[k+1]]);
+		}
+	}
 	var char_index=0; // index for timestamp
 	var text_withtime="";
 	for(var i=0;i<words.length;i++)
